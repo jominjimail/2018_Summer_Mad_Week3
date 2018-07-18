@@ -10,6 +10,7 @@ TagManager:
   - TPortal
   - ARange
   - Range
+  - Spells
   layers:
   - Default
   - TransparentFX

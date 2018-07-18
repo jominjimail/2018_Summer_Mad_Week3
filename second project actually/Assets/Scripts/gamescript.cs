@@ -12,28 +12,33 @@ public class gamescript : Singleton<gamescript> {
     public Portals TPortal { get; set; }
 
 
-    public static Vector3 LeftSpawn = new Vector3(-15, 3, 0);
-    public static Vector3 RightSpawn = new Vector3(15, 0, 0);
+    public static Vector3 LeftSpawn = new Vector3(-14, -10.2f, 0);
+    public static Vector3 RightSpawn = new Vector3(16, -10.2f, 0);
+
 
     //for UI
     private int gold;
     [SerializeField]
     private Text goldText;
     private int sHealth;
-    [SerializeField]
-    private Text sHealthText;
+
     [SerializeField]
     private Text WLText;
+
+    //Victory
+    private bool Victory = false;
 
 
     //for number of Black Unit Types
     [SerializeField]
     private int[] bountyList;
-    [SerializeField]
-    private float antisiutimer;
+    
         //for spawning, done periodically atm
         private float antisiustart;
         private float antisiucd;
+
+    private float pgoldstart;
+    private float pgoldcd;
 
 
     //for number of White Unit types
@@ -70,21 +75,7 @@ public class gamescript : Singleton<gamescript> {
         Gold +=gain;
     }
 
-
-    // Similarly for health
-    public int SquidHealth
-    {
-        get
-        {
-            return sHealth;
-        }
-
-        set
-        {
-            sHealth = value;
-            this.sHealthText.text = "<color=black>SquidBoi's Health: </color>" + value.ToString();
-        }
-    }
+    
 
 
     
@@ -115,10 +106,15 @@ public class gamescript : Singleton<gamescript> {
     // Use this for initialization
 
     void Start() {
-        SquidHealth = 4;
+
+        //Debug.Log("You have chosen difficulty " + ConstantManager.Instance.difficulty + ". Good Luck!");
+
         instance = this;
         SpawnPortals();
-        Gold = 5;
+        Gold = 150;
+
+        pgoldcd = 0.2f;
+        pgoldstart = -pgoldcd;
 
         TypesofMonsters = CDTimes.Length;
         LastCastCDTimes = new float[TypesofMonsters];
@@ -126,21 +122,34 @@ public class gamescript : Singleton<gamescript> {
         {
             LastCastCDTimes[i] = -CDTimes[i];
         }
-        
-        antisiucd = antisiutimer;
+
+
+        antisiucd = 10 - (int) (ConstantManager.Manager.GetDifficulty() / 2);
         antisiustart = - antisiucd;
     }
 
+
+    
     // Update is called once per frame
     void Update() {
-        if (Time.time > antisiustart + antisiucd)
+        if (!Victory && Time.time > antisiustart + antisiucd)
         {
             antisiustart = Time.time;
             int lol = (int) Random.Range(0, 2);
             StartCoroutine(SpawnAMonster(lol));
         }
+
+        PassiveGold();
     }
 
+    private void PassiveGold()
+    {
+        if (Time.time > pgoldstart + pgoldcd)
+        {
+            Gold += 1;
+            pgoldstart = Time.time;
+        }
+    }
     public void SpawnMonsterButton(int type)
     {
         if (Time.time > LastCastCDTimes[type] + CDTimes[type])
@@ -154,7 +163,20 @@ public class gamescript : Singleton<gamescript> {
         }
     }
 
+    public void CastMySpell()
+    {
+        
+        if (Time.time > LastCastCDTimes[TypesofMonsters-1] + CDTimes[TypesofMonsters-1])
+        {
+            LastCastCDTimes[TypesofMonsters - 1] = Time.time;
+            FreezeWind spell = Pool.GetSpell().GetComponent<FreezeWind>();
+            spell.Spawn();
+            CDManager.Instance.PutOnCD(TypesofMonsters-1);
+        }
+    }
 
+    
+    
     private IEnumerator SpawnMonster(int type)
     {
         if (type < TypesofMonsters)
@@ -181,39 +203,39 @@ public class gamescript : Singleton<gamescript> {
     }
 
     public void bounty(int slaintype) {
-        Gold += bountyList[slaintype];
+        Debug.Log("bounty multiplied by " + (ConstantManager.Manager.GetDifficulty() / 4 + 1));
+        Gold += bountyList[slaintype] * (ConstantManager.Manager.GetDifficulty()/4 +1);
     }
 
     private void SpawnPortals()
     {
         GameObject tmp = (GameObject)Instantiate(tPortalPrefab, LeftSpawn, Quaternion.identity);
-        tmp.transform.localScale = new Vector3(2, 2, 1);
         tmp.name = "TPortal";
         GameObject tmp2 = (GameObject)Instantiate(sPortalPrefab, RightSpawn, Quaternion.identity);
-        tmp2.transform.localScale = new Vector3(1, 1, 1);
         tmp2.name = "SPortal";
     }
 
-    public void SquidHit()
-    {
-        if (SquidHealth>0)
-            SquidHealth -= 1;
-        if (SquidHealth == 0)
-        {
-            WLText.text = "YOU DEFEATED THE SQUID AND WON";
-        }
 
-
-    }
-    public void TigerHit()
-    {
-        WLText.text = "YOUR TIGER HAS BEEN HIT AND NOW YOU LOSE";
-    }
+    
     public void PortalDie(bool iswhite)
     {
         if (iswhite)
-            WLText.text = "YOUR TIGER HAS DIED AND NOW YOU LOSE";
+        {
+            WLText.text = "YOU LOSE";
+            StartCoroutine(GoBackToSelection());
+        }
         else
-            WLText.text = "YOU DEFEATED THE SQUID AND WON";
+        {
+            WLText.text = "<color=white>YOU WON</color>";
+            Victory = true;
+            ConstantManager.Manager.SetProgress(ConstantManager.Manager.GetDifficulty());
+            StartCoroutine(GoBackToSelection());
+        }
+    }
+
+    private IEnumerator GoBackToSelection()
+    {
+        yield return new WaitForSeconds(2f);
+        ConstantManager.Manager.SelectionScreen(false);
     }
 }

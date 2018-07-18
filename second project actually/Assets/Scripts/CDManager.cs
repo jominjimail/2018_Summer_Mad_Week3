@@ -18,7 +18,7 @@ public class CDManager : Singleton<CDManager>
     // Update is called once per frame
     void Start()
     {
-        NumberOfCooldowns = gamescript.Instance.TypesofMonsters;
+        NumberOfCooldowns = CDImages.Length;
         coolingDown = new bool[NumberOfCooldowns];
         doit = new bool[NumberOfCooldowns];
         waitingTime = gamescript.Instance.getCDTimes();

@@ -6,6 +6,8 @@ public class ObjectPool : MonoBehaviour {
     [SerializeField]
     private GameObject[] MobjectPrefabs;
     [SerializeField]
+    private GameObject SpellPrefab;
+    [SerializeField]
     private GameObject[] AMobjectPrefabs;
 
     public GameObject GetMObject(int type)
@@ -38,5 +40,10 @@ public class ObjectPool : MonoBehaviour {
         }
         return newObject;
     }
-
+    public GameObject GetSpell()
+    {
+        GameObject newObject = Instantiate(SpellPrefab);
+        newObject.name = "spell";
+        return newObject;
+    }
 }
