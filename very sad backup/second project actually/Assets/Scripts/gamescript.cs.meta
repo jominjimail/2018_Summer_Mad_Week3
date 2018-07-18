@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4ce8ecdf6fb35fc48a7076beabc58e47
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - tPortalPrefab: {fileID: 1493906849727722, guid: af094ff682d402e49a1697efb50702f6,
+      type: 2}
+  - sPortalPrefab: {fileID: 1129007794549220, guid: f6a1c48348a8e8a4eb2f1bc1f221c6f1,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
