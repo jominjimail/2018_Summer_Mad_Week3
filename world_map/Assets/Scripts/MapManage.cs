@@ -15,6 +15,9 @@ public class MapManage : Singleton<MapManage> {
     [SerializeField]
     private GameObject explosion;
 
+    [SerializeField]
+    GameObject playerObject;
+
     public Vector3[] forxy;
     
     // Use this for initialization
@@ -22,7 +25,7 @@ public class MapManage : Singleton<MapManage> {
         limit_progress = 4; // ConstantManager.Manager.GetProgress()+1
         forxy = new Vector3[numberofstages];
         forxy[0] = new Vector3(Home.transform.position.x, Home.transform.position.y , Home.transform.position.z);
-
+        
         
 
         
@@ -40,7 +43,8 @@ public class MapManage : Singleton<MapManage> {
 
         explosion.transform.position = forxy[limit_progress];
         Debug.Log("될까 home:limit progress" + forxy[limit_progress] + "explotion " + explosion.transform.position);//-10.8 , -3.33
-
+        Debug.Log("Should work if this exists" + forxy[0]);
+        Instantiate(playerObject);
     }
 	
 	// Update is called once per frame
