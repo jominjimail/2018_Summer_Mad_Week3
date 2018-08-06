@@ -1,7 +1,10 @@
-#프로젝트 week3
+## week3
 
-[Defense of the League of Heroes]
-by 장우진 and 조민지
+### unity
+
+### 프로젝트 이름: [Defense of the League of Heroes]
+
+### 팀원: 장우진, 조민지
 
 [다운 링크](https://drive.google.com/…/1cc0iKko515u4FG9XPOtZO_yk5…/view…)
 
