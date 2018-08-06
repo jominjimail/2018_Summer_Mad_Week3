@@ -4,7 +4,7 @@
 
 ### 프로젝트 이름: [Defense of the League of Heroes]
 
-### 팀원: 장우진, 조민지
+### 팀원 이름: 장우진, 조민지
 
 [다운 링크](https://drive.google.com/…/1cc0iKko515u4FG9XPOtZO_yk5…/view…)
 
